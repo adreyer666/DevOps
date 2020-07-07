@@ -14,10 +14,13 @@ apt install -y \
 	vagrant \
 	vagrant-libvirt
 
-apt install -y git
+apt install -y git ssvnc
 
 git clone https://github.com/adreyer666/DevOps.git
 cd DevOps
 vagrant up
+vagrant ssh-config >> ~/.ssh/config
+
+ssh DevOps
 ```
 

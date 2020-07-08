@@ -6,7 +6,7 @@ IMAGE = DevOps_$(BUILD)
 
 
 build:
-	vagrant up
+	vagrant up --provider=libvirt
 	vagrant ssh-config >> ~/.ssh/config
 	ssh -X $(BUILD)
 
@@ -18,6 +18,6 @@ pause:
 	virsh managedsave $(IMAGE)
 
 clean:
-	virsh destroy $(IMAGE)
+	-virsh destroy $(IMAGE)
 	-vagrant destroy -f
 

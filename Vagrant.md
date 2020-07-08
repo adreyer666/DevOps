@@ -7,18 +7,16 @@
 
 ## Install and setup
 ```
-apt install -y vagrant
+sudo apt install -y vagrant vagrant-libvirt
 vagrant version
-vagrant init
-
-# edit Vagrantfile
-
-vagrant up
-vagrant box list
 vagrant plugin list
+vagrant plugin install vagrant-disksize
+vagrant plugin install vagrant-libvirt
+vagrant box list
 
-## vagrant plugin install vagrant-libvirt
-
+vagrant init
+# edit Vagrantfile
+vagrant up
 
 vagrant halt
 vagrant up

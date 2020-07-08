@@ -7,8 +7,8 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/testing64"
 
   config.vm.hostname = "DevOps"
-
   config.vm.network :private_network, :ip => "192.168.124.10"
+  #config.disksize.size = '50GB'
   # config.vm.synced_folder "../data", "/vagrant_data"
 
   config.vm.provider :libvirt do |libvirt|

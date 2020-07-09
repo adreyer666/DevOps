@@ -9,7 +9,7 @@ apt-get install -q -y --no-install-recommends \
     procps iproute2 \
     curl ca-certificates gpg sudo \
     lrzip iptables \
-    xauth x11-apps xterm \
+    xauth x11-apps x11-utils xterm \
     libxtst6 libasound2 \
     fakeroot gpg-agent xdg-utils \
     git jq sshpass \
@@ -54,6 +54,10 @@ sysctl -p /etc/sysctl.d/10-userns.conf
 mkdir -p /usr/local/src
 
 # add x11docker to run X11 container apps
+apt-get install -q -y --no-install-recommends \
+	xinit xpra nxagent xvfb tini
+mkdir -p /usr/local/share/x11docker/
+ln -s /usr/bin/tini /usr/local/share/x11docker/tini-static
 cd /usr/local/src
 git clone https://github.com/mviereck/x11docker.git
 cp x11docker/x11docker /usr/local/bin

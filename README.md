@@ -19,7 +19,8 @@ apt install -y git ssvnc
 git clone https://github.com/adreyer666/DevOps.git
 cd DevOps
 vagrant up
-vagrant ssh-config >> ~/.ssh/config
+grep 'Include' ~/.ssh/config || echo 'Include config.d/*.conf' >> ~/.ssh/config
+vagrant ssh-config >> ~/.ssh/config.d/default.conf
 
 ssh DevOps
 ```

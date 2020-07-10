@@ -38,7 +38,7 @@ apt-get update
 apt-get install -q -y --no-install-recommends \
     ansible \
     containers-storage \
-    podman buildah runc umoci slirp4netns tini \
+    podman-rootless buildah runc umoci slirp4netns tini \
     kubernetes-client kubetail
 
 # cleanup

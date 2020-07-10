@@ -53,11 +53,20 @@ sysctl -p /etc/sysctl.d/10-userns.conf
 
 mkdir -p /usr/local/src
 
-# add x11docker to run X11 container apps
+# zsh
+mkdir /usr/local/src/ohmyzsh
+cd /usr/local/src/ohmyzsh
+curl -Lo install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+su - vagrant -c "/bin/sh /usr/local/src/ohmyzsh/install.sh --unattended"
+chsh -s /bin/zsh vagrant
+
+# prep for x11docker
 apt-get install -q -y --no-install-recommends \
 	xinit xpra nxagent xvfb tini
 mkdir -p /usr/local/share/x11docker/
 ln -s /usr/bin/tini /usr/local/share/x11docker/tini-static
+
+# add x11docker to run X11 container apps
 cd /usr/local/src
 git clone https://github.com/mviereck/x11docker.git
 cp x11docker/x11docker /usr/local/bin
@@ -67,15 +76,7 @@ chmod 755 /usr/local/bin/x11docker
 cd /usr/local/src
 git clone https://github.com/adreyer666/Python-IDE.git
 cd Python-IDE
-make
 cp python-ide /usr/local/bin
 chmod 755 /usr/local/bin/python-ide
-
-# zsh
-mkdir /usr/local/src/ohmyzsh
-cd /usr/local/src/ohmyzsh
-curl -Lo install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-su - vagrant -c "/bin/sh /usr/local/src/ohmyzsh/install.sh --unattended"
-chsh -s /bin/zsh vagrant
-
+su - vagrant -c "(cd /usr/local/src/Python-IDE && make)"
 

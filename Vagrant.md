@@ -6,6 +6,17 @@
 ---
 
 ## Install and setup
+
+### dependencies and required tools
+```
+sudo apt install -y \
+    nfs-kernel-server \
+    dnsmasq sshpass \
+    libvirt-daemon libvirt-daemon-driver-qemu libvirt-clients \
+    qemu-kvm qemu-system-x86
+```
+
+### vagrant
 ```
 sudo apt install -y vagrant vagrant-libvirt
 vagrant version

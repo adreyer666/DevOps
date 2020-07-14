@@ -1,24 +1,26 @@
 #!/usr/bin/env make
 
 BUILD = default
-IMAGE = DevOps_$(BUILD)
 
-
+  DIR := $(shell pwd)
+ NAME := $(shell basename $(DIR))
+IMAGE = $(NAME)_$(BUILD)
 
 build:
 	vagrant up --provider=libvirt
-	vagrant ssh-config >> ~/.ssh/config.d/$(BUILD).conf
-	ssh -X $(BUILD)
+	vagrant ssh-config --host $(NAME) >> ~/.ssh/config.d/$(NAME).conf
+	ssh -X $(NAME)
 
 run:
 	virsh start $(IMAGE)
-	ssh -X $(BUILD)
+	ssh -X $(NAME)
 
 pause:
 	virsh managedsave $(IMAGE)
 
 clean:
-	-rm ~/.ssh/config.d/$(BUILD).conf
+	-rm ~/.ssh/config.d/$(NAME).conf
 	-virsh destroy $(IMAGE)
 	-vagrant destroy -f
+	-virsh undefine $(IMAGE)
 

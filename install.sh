@@ -2,19 +2,19 @@
 
 DEBIAN_FRONTEND=noninteractive; export DEBIAN_FRONTEND
 
-apt-get update
+apt-get update -q
 apt-get upgrade -q -y
+apt-get dist-upgrade -q -y
 
 apt-get install -q -y --no-install-recommends \
-    procps iproute2 \
-    curl ca-certificates gpg sudo \
-    lrzip iptables \
+    procps iproute2 iptables nftables \
+    curl ca-certificates sudo \
+    vim-tiny openssh-client gpg gpg-agent lrzip \
     xauth x11-apps x11-utils xterm \
-    libxtst6 libasound2 \
-    fakeroot gpg-agent xdg-utils \
-    git jq sshpass \
-    build-essential \
-    pandoc fonts-dejavu
+    libxtst6 libasound2 xdg-utils \
+    git jq \
+    build-essential fakeroot \
+    pandoc fonts-dejavu sshpass
 
 apt-get install -q -y --no-install-recommends \
     python3 python3-dev python3-pip python3-wheel \
@@ -48,8 +48,23 @@ apt-get install -f
 apt-get clean && rm -rf /tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/partial
 
 
-# ---- add some local tools ---- #
+# ---- add some local configurations/tools ---- #
+# activate user namespaces
+echo "kernel.unprivileged_userns_clone=1" >> /etc/sysctl.d/10-userns.conf
+sysctl -p /etc/sysctl.d/10-userns.conf
+# system
+echo 'net.ipv4.ip_forward = 1' > /etc/sysctl.d/10-ip_forward.conf
+sysctl -p /etc/sysctl.d/10-ip_forward.conf
+cat > /etc/sysctl.d/k8s.conf <<EOM
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOM
+sysctl --system
+swapoff -a
 
+# ---- staging area ---- #
+# user
+su - vagrant -c "git config --global pull.ff only"
 mkdir -p /usr/local/src
 mkdir -p /usr/local/bin
 
@@ -122,12 +137,6 @@ chsh -s /bin/zsh vagrant
 
 # ---- get/build some containers ---- #
 
-mkdir -p /usr/local/src
-
-# activate user namespaces
-echo "kernel.unprivileged_userns_clone=1" >> /etc/sysctl.d/10-userns.conf
-sysctl -p /etc/sysctl.d/10-userns.conf
-
 # prep for x11docker
 apt-get install -q -y --no-install-recommends \
     xinit xpra nxagent xvfb tini
@@ -147,4 +156,7 @@ cd Python-IDE
 cp python-ide /usr/local/bin
 chmod 755 /usr/local/bin/python-ide
 su - vagrant -c "(cd /usr/local/src/Python-IDE && make)"
+
+chown -R vagrant: /usr/local/src
+
 
